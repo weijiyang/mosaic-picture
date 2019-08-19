@@ -1,0 +1,92 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #mosaic{
+            font-size: 10px;
+            line-height: 10px;
+            letter-spacing: 10px;
+            text-indent:1em;
+        }
+        span{
+            display:inline-block;
+            width: 10px;
+            height: 10px;
+            text-align:center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mosaic" style="transform:scale(.5);white-space:nowrap;text-align:center;top:0;"></div>
+    <img src="temp.jpg" width="500" height="500">
+    <canvas id="abc"></canvas>
+    <img src="temp.jpg" width="500" height="500">
+    <canvas id="canvas"></canvas>
+
+    <script>
+        try {
+            var canvas = document.getElementById("canvas");
+            var context = canvas.getContext("2d");
+            canvas.width = 500;
+            canvas.height = 500;
+            var img = new Image();
+            img.src = "temp.jpg";
+            img.onload = function (e) {
+                invert(this);
+            };
+            //    像素点的rgba数组
+            function invert(img) {
+                context.drawImage(img, 0, 0, 500, 500);
+                //获取图片对象以及元素点的数组
+                var img1 = context.getImageData(0, 0, 500, 500);
+                var data = img1.data;
+                //反转rgba
+                for (var i = 0, len = data.length; i < len; i += 4) {
+                    data[i] = 255 - data[i];
+                    data[i + 1] = 255 - data[i + 1];
+                    data[i + 2] = 255 - data[i + 2];
+                }
+                context.putImageData(img1, 0, 0);
+            }
+
+
+            var canvas1 = document.getElementById("abc");
+            var context1 = canvas1.getContext("2d");
+            canvas1.width = 500;
+            canvas1.height = 500;
+            var img1 = new Image();
+            img1.src = "temp.jpg";
+            img1.onload = function (e) {
+                invertABC(this);
+            };
+
+            function invertABC(img) {
+                context.drawImage(img, 0, 0, 500, 500);
+                //获取图片对象以及元素点的数组
+                var img1 = context.getImageData(0, 0, 500, 500);
+                var data = img1.data;
+                //转换灰度图
+                var arr = ["M","N","H","Q","$","O","C","?","7",">","!",":","–",";",".","#","~"];
+                var result = [];
+                for (var i = 0, len = data.length; i < len; i += 4) {
+                    var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                    var num = Math.floor(avg / 15);
+                    result.push('<span>' + arr[num] + '</span>');
+                    if (i % 2000 == 0 && i != 0) {
+                        result.push("<br>")
+                    }
+                }
+                document.getElementById('mosaic').innerHTML = result.join('')
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    </script>
+</body>
+
+</html>
