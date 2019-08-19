@@ -1,0 +1,75 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #mosaic{
+            font-size: 10px;
+            line-height: 10px;
+            letter-spacing: 10px;
+            text-indent:1em;
+        }
+        span{
+            display:inline-block;
+            width: 10px;
+            height: 10px;
+            text-align:center;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mosaic" style="transform:scale(.1);white-space:nowrap;text-align:center;top:0;"></div>
+    <canvas id="abc"></canvas>
+
+    <script>
+        try {
+            var canvas1 = document.getElementById("abc");
+            var context1 = canvas1.getContext("2d");
+            canvas1.width = 500;
+            canvas1.height = 500;
+            var img1 = new Image();
+            img1.src = "temp.jpg";
+            img1.onload = function (e) {
+                invertABC(this);
+            };
+
+            function invertABC(img) {
+                context1.drawImage(img, 0, 0, 500, 500);
+                //获取图片对象以及元素点的数组
+                var img1 = context1.getImageData(0, 0, 500, 500);
+                var data = img1.data;
+                //转换灰度图
+                var htmlStr = []
+                var result = []
+                var rowArr = [];
+                var  colorArr = []
+                for (var i = 0, len = data.length; i < len; i += 4) {
+                    colorArr = [data[i], data[i+1], data[i+2], data[i+3]]
+                    rowArr.push(colorArr)
+                    if (i % 2000 == 0 && i != 0) {
+                        result.push(JSON.parse(JSON.stringify(rowArr)))
+                        rowArr = []
+                    }
+                }
+
+                for (var k = 0; k < result.length ; k++){
+                    htmlStr.push('<br>')
+                    for(var j =0; j < result[k].length; j++) {
+                        let color = result[k][j]
+                        htmlStr.push("<span style='background:rgb(" + color[0] + "," + color[1] + "," +color[2] + ")'></span>")
+                    }
+                }
+                document.getElementById('mosaic').innerHTML = htmlStr.join('')
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    </script>
+</body>
+
+</html>
