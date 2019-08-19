@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    <div id="mosaic" style="transform:scale(.5);white-space:nowrap;text-align:center;top:0;"></div>
+    <div id="mosaic" style="transform:scale(.2);white-space:nowrap;text-align:center;top:0;"></div>
     <img src="temp.jpg" width="500" height="500">
     <canvas id="abc"></canvas>
     <img src="temp.jpg" width="500" height="500">
@@ -71,7 +71,7 @@
                 var img1 = context.getImageData(0, 0, 500, 500);
                 var data = img1.data;
                 //转换灰度图
-                var arr = ["M","N","H","Q","$","O","C","?","7",">","!",":","–",";",".","#","~"];
+                var arr = ["M","N","H","Q","$","O","C","?","7",">","!",":","–",";",".","#","~", "·"];
                 var result = [];
                 for (var i = 0, len = data.length; i < len; i += 4) {
                     var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
